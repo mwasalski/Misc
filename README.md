@@ -1,6 +1,8 @@
-## FileCreator Class
+## file_creator Class
 
 The `file_creator` class is a utility tool designed to simplify the process of creating multiple files with different extensions in a specified directory.
+
+## create_files_diff_extension method:
 
 ### Features
 - Creates multiple files with specified extensions in one operation
