@@ -1,5 +1,6 @@
 #To Do:
 # błąd, jeśli pliki już istnieją, żeby nie nadpisywać
+# print do parqueta
 
 
 class file_creator:
@@ -13,6 +14,13 @@ class file_creator:
         # self.os jakbym chciał użyć jakieś innej metody
         import os
         self.os = os
+        
+        import pandas
+        self.pandas = pandas    
+        import pyarrow
+        self.pyarrow = pyarrow
+        import pyarrow.parquet
+        self.pyarrow_parquet = pyarrow.parquet
 
 
     def create_files_diff_extension(self, folder=None, files=None, extensions=None):
@@ -77,11 +85,39 @@ class file_creator:
         return f"Stworzone pliki: {files}\nFolder: {folder_path}"
     
     
+    def create_file_parquet(self, folder=None, data_dict=None):
+        
+        folder_path = folder or self.folder
+        
+        # jeśli nie podałem folderu:
+        if folder is None:
+            folder_path = self.os.getcwd() # folder_path to folder w którym jest plik
+        else:
+            folder_path = folder # jesli podałem, to stworzy folder w folderze, w którym jest plik
+        
+        df = self.pandas.DataFrame(data_dict)
+
+        # dataframe to table
+        table = self.pyarrow.Table.from_pandas(df)
+
+        # table to parquet_file
+        self.pyarrow.parquet.write_table(table,  f'{folder_path}/config_table.parquet')
+        
+        
 # Przykład użycia
 folder = "folder"
 files = ["plik", "plikk", "plikkk"]
 extensions = ["ipynb", "py", "md"]
 extension = "mp3"
+
+# dataframe
+data = {
+'Date': [],
+'Name': [],
+'Surname': [],
+'Country': [],
+'Value': []
+}
 
 fc = file_creator()
 result = fc.create_files_diff_extension(folder, files, extensions)
@@ -90,3 +126,6 @@ print(result)
 
 oe = fc.create_file_one_extension(folder, files, extension)
 print(oe)
+
+parquet = fc.create_file_parquet(folder, data)
+print(parquet)
