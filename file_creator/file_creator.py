@@ -1,6 +1,7 @@
 #To Do:
 # błąd, jeśli pliki już istnieją, żeby nie nadpisywać
 # print do parqueta
+# 
 
 
 class file_creator:
@@ -22,7 +23,15 @@ class file_creator:
         import pyarrow.parquet
         self.pyarrow_parquet = pyarrow.parquet
 
-
+    def create_folder(self, folder=None):
+        if folder is None:
+            folder_path = self.os.getcwd() # folder_path to istniejąca ścieżka do folderu
+        else:
+            folder_path = folder # jesli podałem, to stworzy folder w folderze, w którym jest plik
+        
+        if not self.os.path.exists(folder_path):
+            self.os.makedirs(folder_path)
+        
     def create_files_diff_extension(self, folder=None, files=None, extensions=None):
         
         # Use parameters from method if provided, otherwise use instance variables
@@ -32,7 +41,7 @@ class file_creator:
 
             # jeśli nie podałem folderu:
         if folder is None:
-            folder_path = self.os.getcwd() # folder_path to folder w którym jest plik
+            folder_path = self.os.getcwd() # folder_path to istniejąca ścieżka do folderu
         else:
             folder_path = folder # jesli podałem, to stworzy folder w folderze, w którym jest plik
                
